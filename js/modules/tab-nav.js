@@ -1,29 +1,31 @@
-// NAVEGAÇÃO POR TABS
-// FUNÇÃO PARA INICIAR E MANTER TUDO EM ESCOPO LOCAL
-export default function initTabNav() {
-  const tabMenu = document.querySelectorAll('[data-tab="menu"] li');
-  const tabContent = document.querySelectorAll('[data-tab="content"] section');
-  // VARIÁVEL PRA NÃO REPETIR A STRING 'ATIVO' TODA HORA
-  // const activeClass = 'ativo';
-
-  // FUNÇÃO PARA INCLUIR A CLASSE ATIVO E REMOVER DE QUEM JÁ TEM
-  function activeTab(index) {
-    tabContent.forEach((section) => {
-      section.classList.remove("ativo");
-    });
-    const direcao = tabContent[index].dataset.anime;
-    tabContent[index].classList.add("ativo", direcao);
+export default class TabNav {
+  constructor(menu, content) {
+    this.tabMenu = document.querySelectorAll(menu);
+    this.tabContent = document.querySelectorAll(content);
+    this.activeClass = "ativo";
   }
 
-  if (tabMenu.length && tabContent.length) {
-    // PRIMEIRO ITEM SEMPRE TER A CLASSE ATIVO
-    tabContent[0].classList.add("ativo");
-
-    // LOOP PRA CLICAR E PEGAR QUAL ITEM TA SENDO CLICADO E ADICIONAR A activeTab
-    tabMenu.forEach((itemMenu, index) => {
-      itemMenu.addEventListener("click", () => {
-        activeTab(index);
-      });
+  // ativa a tab de acordo com o index da mesma
+  activeTab(index) {
+    this.tabContent.forEach((section) => {
+      section.classList.remove(this.activeClass);
     });
+    const direcao = this.tabContent[index].dataset.anime;
+    this.tabContent[index].classList.add(this.activeClass, direcao);
+  }
+
+  // adiciona os eventos às tabs
+  addTabNavEvent() {
+    this.tabMenu.forEach((itemMenu, index) => {
+      itemMenu.addEventListener("click", () => this.activeTab(index));
+    });
+  }
+
+  init() {
+    if (this.tabMenu.length && this.tabContent.length) {
+      // ativar primeiro item
+      this.activeTab(0);
+      this.addTabNavEvent();
+    }
   }
 }
